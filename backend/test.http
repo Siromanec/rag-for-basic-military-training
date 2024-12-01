@@ -1,0 +1,34 @@
+###
+POST http://localhost:8000/generate-response
+Content-Type: application/json
+
+[
+  {
+    "conversationId": "123",
+    "text": "Hello!",
+    "sender": "user"
+  },
+  {
+    "conversationId": "123",
+    "text": "Hello, World!",
+    "sender": "bot"
+  },
+  {
+    "conversationId": "123",
+    "text": "ima rizz u up",
+    "sender": "user"
+  },
+  {
+    "conversationId": "123",
+    "text": "I'm going to rizzzzzzzzzzzzzzzz",
+    "sender": "bot"
+
+  },
+  {
+    "conversationId": "123",
+    "text": "wazzup bbygrl?",
+    "sender": "user"
+  }
+]
+
+###

@@ -1,17 +1,18 @@
 import React, {useState} from "react";
 import {Box, TextField, Button, Typography, Paper} from "@mui/material";
-
+import { v4 as uuidv4 } from 'uuid';
 // Define the types for a message
 
 interface Message {
     sender: "user" | "bot";
     text?: string;
     imageUrl?: string;
+    conversationId: string;
 }
-
+sessionStorage.setItem("conversationId", uuidv4());
 const Chat: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([
-        {sender: "bot", text: "Hello! How can I assist you today?"},
+        {sender: "bot", text: "Hello! How can I assist you today?", conversationId: sessionStorage.getItem("conversationId") as string},
     ]);
     const [input, setInput] = useState<string>("");
 
@@ -19,7 +20,7 @@ const Chat: React.FC = () => {
     const handleSend = () => {
         if (input.trim() === "") return;
 
-        const userMessage: Message = {sender: "user", text: input};
+        const userMessage: Message = {sender: "user", text: input, conversationId: sessionStorage.getItem("conversationId") as string};
         setMessages((prev) => [...prev, userMessage]);
         setInput("");
 
@@ -36,13 +37,14 @@ const Chat: React.FC = () => {
                     "Vestibulum blandit purus vitae aliquet ornare. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tortor nisi, volutpat id libero in, ultrices egestas arcu. Donec vulputate ac lacus nec ornare. Nullam eget felis est. Aenean porta consequat dolor. Etiam bibendum convallis tristique. Aliquam vulputate blandit nisi, sit amet viverra est pretium sed.\n" +
                     "\n\n" +
                     "Aenean scelerisque posuere turpis in interdum. Fusce posuere nunc sit amet gravida sagittis. Praesent dictum metus tortor, et porta sem tincidunt nec. Morbi condimentum libero urna, eget gravida libero congue sed. Ut a pretium est. Etiam consequat odio nisi, sit amet euismod purus blandit id. Vivamus bibendum consequat vulputate. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus sed leo eu urna dapibus accumsan. Mauris sed ipsum tellus. Pellentesque quis condimentum nulla.",
+                conversationId: sessionStorage.getItem("conversationId") as string
             };
             setMessages((prev) => [...prev, botMessage]);
             setTimeout(() => {
                 const botResponses: Message[] = [
-                    {sender: "bot", text: "Here's an image for you!"},
-                    {sender: "bot", imageUrl: "https://via.placeholder.com/500"},
-                    {sender: "bot", text: "Let me know if you need anything else!"},
+                    {sender: "bot", text: "Here's an image for you!", conversationId: sessionStorage.getItem("conversationId") as string},
+                    {sender: "bot", imageUrl: "https://via.placeholder.com/500", conversationId: sessionStorage.getItem("conversationId") as string},
+                    {sender: "bot", text: "Let me know if you need anything else!", conversationId: sessionStorage.getItem("conversationId") as string},
                 ];
 
                 botResponses.forEach((response, index) => {
