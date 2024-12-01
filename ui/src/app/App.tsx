@@ -1,25 +1,18 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Chat from "../view/view.chat";
+import {Box} from "@mui/material";
+import camo from "./camo.jpg";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Box sx={{backgroundImage:`url(${camo})`, height: "100vh"}}>
+          <Box sx={{ display: "flex", justifyContent: "center", paddingTop: 4 }}>
+              <Chat />
+          </Box>
+      </Box>
+
   );
 }
 
