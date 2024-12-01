@@ -1,8 +1,7 @@
 from typing import Annotated
 
 import fastapi
-from fastapi import Body
-from pydantic import AfterValidator, ValidationError
+from pydantic import AfterValidator
 
 import service.service
 from repository.Message import Message
