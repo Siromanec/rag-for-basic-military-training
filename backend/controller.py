@@ -17,6 +17,12 @@ def validate_conversation(conversation: list[Message]) -> list[Message]:
             "msg": "Conversation must have at least one message",
             "type": "value_error"
         })
+    if conversation[-1].sender != "user":
+        raise fastapi.HTTPException(status_code=422, detail={
+            "loc": [len(conversation) - 1],
+            "msg": "Last message must be sent by user",
+            "type": "value_error"
+        })
 
     conversation_id = conversation[0].conversationId
     for i, message in enumerate(conversation):
