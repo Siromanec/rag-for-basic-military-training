@@ -10,7 +10,7 @@ function App() {
         <Box sx={{
             backgroundImage: `url(${camo})`,
             height: "100vh",
-            backgroundColor: "rgba(0, 0, 0, .1)",
+            backgroundColor: "rgba(0, 0, 0, .2)",
             backgroundBlendMode: "multiply"
         }}>
             <Box sx={{display: "flex", justifyContent: "center", paddingTop: 4}}>
