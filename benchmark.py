@@ -25,7 +25,6 @@ def measure_accuracy(response, answer):
     return cosine_similarity([embeddings[0]], [embeddings[1]])[0][0]
 
 # TODO: rewrite main to measure accuracy using Gemini
-# assert pathlib.Path(".env").exists()
 
 def LLM_measure_accuracy(query:str, response: str, answer: str, llm: genai.GenerativeModel):
     prompt = (
@@ -43,6 +42,7 @@ def LLM_measure_accuracy(query:str, response: str, answer: str, llm: genai.Gener
     return reply.candidates[0].content.parts[0].text
 
 if __name__ == "__main__":
+    # assert pathlib.Path(".env").exists()
     # load_dotenv()
     # assert os.getenv("GEMINI_API_KEY")
 
