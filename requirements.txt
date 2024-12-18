@@ -11,3 +11,5 @@ unstructured_inference~=0.8.1
 pytesseract~=0.3.13
 unstructured_pytesseract~=0.3.13
 langchain_huggingface~=0.1.2
+google-generativeai
+loguru
