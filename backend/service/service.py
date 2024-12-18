@@ -1,6 +1,6 @@
 from repository import convert_image_to_base64_url, read_config_file
 from repository.Message import Message
-from repository.abstract_chatbot import TextAndImagesChatBot
+from service.abstract_chatbot import TextAndImagesChatBot
 
 from pathlib import Path
 qa: TextAndImagesChatBot | None = None
