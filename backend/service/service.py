@@ -1,10 +1,9 @@
-import numpy as np
-
 from repository import convert_image_to_base64_url, read_config_file
 from repository.Message import Message
 from repository.abstract_chatbot import TextAndImagesChatBot
 
 qa: TextAndImagesChatBot | None = None
+
 
 def init_service() -> None:
     global qa
@@ -15,6 +14,7 @@ def init_service() -> None:
 
 IMAGE_RESPONSE_TEXT = "Знайдено наступні релевантні зображення:"
 
+
 def generate_response(conversation: list[Message]) -> list[Message]:
     text, images = qa.answer_query(conversation[-1].text)
 
@@ -24,5 +24,6 @@ def generate_response(conversation: list[Message]) -> list[Message]:
 
     conversation.append(Message(sender="bot", text=IMAGE_RESPONSE_TEXT, conversationId=conversation[0].conversationId))
     for image in images:
-        conversation.append(Message(sender="bot", imageUrl=convert_image_to_base64_url(image), conversationId=conversation[0].conversationId))
+        conversation.append(Message(sender="bot", imageUrl=convert_image_to_base64_url(image),
+                                    conversationId=conversation[0].conversationId))
     return conversation
