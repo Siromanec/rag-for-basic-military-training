@@ -2,6 +2,7 @@ from repository import convert_image_to_base64_url, read_config_file
 from repository.Message import Message
 from repository.abstract_chatbot import TextAndImagesChatBot
 
+from pathlib import Path
 qa: TextAndImagesChatBot | None = None
 
 
@@ -9,6 +10,9 @@ def init_service() -> None:
     global qa
 
     files = read_config_file()
+    files = [file.strip() for file in files]
+    files = [file for file in files if file.endswith(".pdf")]
+    files = [Path(file) for file in files]
     qa = TextAndImagesChatBot(files)
 
 
