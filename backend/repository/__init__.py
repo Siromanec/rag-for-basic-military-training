@@ -1,7 +1,17 @@
 import base64
+import os
 
 import cv2
 import numpy as np
+
+DATA_PATH = "./data"
+
+CONFIG_PATH = os.path.join(DATA_PATH, "./config.txt")
+
+
+def read_config_file() -> list[str]:
+    with open(CONFIG_PATH, "r", encoding="utf-8") as file:
+        return file.readlines()
 
 
 def convert_image_to_base64_url(image: np.ndarray) -> str:

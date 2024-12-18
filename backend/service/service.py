@@ -1,10 +1,17 @@
 import numpy as np
 
-from repository import convert_image_to_base64_url
+from repository import convert_image_to_base64_url, read_config_file
 from repository.Message import Message
 from repository.abstract_chatbot import TextAndImagesChatBot
 
-qa: TextAndImagesChatBot = TextAndImagesChatBot()
+qa: TextAndImagesChatBot | None = None
+
+def init_service() -> None:
+    global qa
+
+    files = read_config_file()
+    qa = TextAndImagesChatBot(files)
+
 
 IMAGE_RESPONSE_TEXT = "Знайдено наступні релевантні зображення:"
 

@@ -1,17 +1,25 @@
+from contextlib import asynccontextmanager
 from typing import Annotated
 
 import fastapi
 from pydantic import AfterValidator
 
 import service.service
+
+from service.service import init_service
 from repository.Message import Message
 
-router = fastapi.APIRouter()
+
+@asynccontextmanager
+async def lifespan(router: fastapi.APIRouter):
+    init_service()
+    yield
+
+router = fastapi.APIRouter(lifespan=lifespan)
 
 
 def validate_conversation(conversation: list[Message]) -> list[Message]:
     if len(conversation) == 0:
-
         raise fastapi.HTTPException(status_code=422, detail={
             "loc": ["conversation"],
             "msg": "Conversation must have at least one message",
@@ -33,7 +41,8 @@ def validate_conversation(conversation: list[Message]) -> list[Message]:
                 "type": "value_error"
             })
 
-        if (message.text is None and message.imageUrl is None) or (message.text is not None and message.imageUrl is not None):
+        if (message.text is None and message.imageUrl is None) or (
+                message.text is not None and message.imageUrl is not None):
             raise fastapi.HTTPException(status_code=422, detail={
                 "loc": [i],
                 "msg": "Message must have either text or imageUrl",
