@@ -2,15 +2,16 @@ import os
 import pathlib
 from typing import override
 
+import google.generativeai as genai
 from dotenv import load_dotenv
 from langchain.docstore.document import Document
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_huggingface import HuggingFaceEndpoint
 from langchain_text_splitters import CharacterTextSplitter
 from loguru import logger as console_logger
 
 from .abstract_chatbot import TextAndImagesChatBot
+from .gemini_helpers import generate_RAG_response
 
 
 class ChillChatBot(TextAndImagesChatBot):
@@ -22,12 +23,11 @@ class ChillChatBot(TextAndImagesChatBot):
         self.text_retriever = None
         self.embedding_model = None
         self.llm = None
-        self.retrieval_qa_chain = None
+        self.RAG_pipeline = None
 
         self._process_PDFs()
-        self._load_generator_model(to_test=False)
-        self._create_retrieval_qa_chain(to_test=True)
-
+        self._load_generator_model()
+        self._generate_RAG_pipeline()
 
     def _process_PDFs(self) -> None:
         """
@@ -58,46 +58,36 @@ class ChillChatBot(TextAndImagesChatBot):
 
         console_logger.info(f"Retriever and embedder successfully initialized.")
 
-    def _load_generator_model(self, to_test: bool = True) -> None:
+    def _load_generator_model(self) -> None:
         assert pathlib.Path(".env").exists()
         load_dotenv()
-        assert os.getenv("HUGGINGFACEHUB_API_TOKEN")
+        assert os.getenv("GEMINI_API_KEY")
 
-        repo_id = "microsoft/Phi-3.5-mini-instruct"
+        genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
-        self.llm = HuggingFaceEndpoint(
-            repo_id=repo_id,
-            temperature=0.5,
-            model_kwargs=dict(max_length=256),
-            huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_API_TOKEN")
-        )
+        model_name = "gemini-1.5-flash"
+        model = genai.GenerativeModel(model_name, generation_config=genai.GenerationConfig(
+            max_output_tokens=1000,
+            temperature=0.1,
+        ))
 
-        if to_test:
-            self.llm.invoke("test run. Tell me a powerful joke.")
+        self.llm = model
 
         console_logger.info(f"LLM successfully initialized.")
 
-    def _create_retrieval_qa_chain(self, to_test: bool = True) -> None:
-        from langchain.chains import RetrievalQA
-
-        self.retrieval_qa_chain = RetrievalQA.from_chain_type(
-            llm=self.llm,
-            retriever=self.text_retriever,
-            return_source_documents=True,
-        )
-
-        if to_test:
-            self.retrieval_qa_chain.invoke("Хахаха! Попався!! Це ТЦК!!!!")
-
+    def _generate_RAG_pipeline(self) -> None:
+        self.RAG_pipeline = lambda query: generate_RAG_response(query, self.text_retriever, self.llm)
+        console_logger.info(f"RAG pipeline successfully initialized.")
 
     @override
     def answer_query(self, query: str) -> tuple[str, list[...]]:
-        ...
+        result = self.RAG_pipeline(query)
+        return result["response"], ...
 
     @override
     def get_retrieved_documents(self, query: str) -> list[Document]:
-        ...
+        return self.text_retriever.invoke(query)
 
 
 if __name__ == "__main__":
-    ChillChatBot(PDF_paths=list((pathlib.Path(__file__).absolute().parent.parent / "benchmark" / "data").glob("*.pdf")))
+    ChillChatBot(PDF_paths=list((pathlib.Path(__file__).absolute().parent.parent / "backend" / "data").glob("*.pdf")))
