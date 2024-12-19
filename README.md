@@ -17,6 +17,11 @@ pip install -r requirements.txt
 python benchmark.py
 ```
 
+## Indexing the text in PDFs
+```bash
+ python -m chatbot.process_PDFs
+```
+Now, you can use the chill bot.
 
 ## Creating the index for image retrieval
 
