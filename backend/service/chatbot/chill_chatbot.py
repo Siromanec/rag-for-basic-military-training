@@ -1,6 +1,6 @@
 import os
 import pathlib
-from typing import override
+from overrides import override
 
 import google.generativeai as genai
 from dotenv import load_dotenv
@@ -28,7 +28,7 @@ class ChillChatBot(TextAndImagesChatBot):
         self._load_generator_model()
         self._generate_RAG_pipeline()
 
-        self.similar_image_searcher = SimilarImagesSearcher(pathlib.Path("") / "backend" / "data")
+        self.similar_image_searcher = SimilarImagesSearcher(pathlib.Path("") / "data")
 
     def _process_PDFs(self) -> None:
         """
