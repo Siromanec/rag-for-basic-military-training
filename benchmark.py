@@ -1,12 +1,10 @@
-from chatbot.chill_chatbot import ChillChatBot
+from backend.service.chatbot.chill_chatbot import ChillChatBot
 from sentence_transformers import SentenceTransformer
 import google.generativeai as genai
-from dotenv import load_dotenv
 
 from pathlib import Path
 from tqdm import tqdm
 from sklearn.metrics.pairwise import cosine_similarity
-import os
 
 pdf_path = "backend/data/"
 question_path = "benchmark/questions.txt"

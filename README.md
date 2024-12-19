@@ -19,7 +19,7 @@ python benchmark.py
 
 ## Indexing the text in PDFs
 ```bash
- python -m chatbot.process_PDFs
+ python -m backend.service.chatbot.process_PDFs
 ```
 Now, you can use the chill bot.
 
@@ -27,11 +27,11 @@ Now, you can use the chill bot.
 
 1. Extract images from the PDFs.
     ```bash
-   python -m chatbot.visual.image_extractor
+   python -m backend.service.chatbot.visual.image_extractor
    ```
 2. Create the FAISS index out of them:
    ```bash
-   python -m chatbot.visual.index_serialization
+   python -m backend.service.chatbot.visual.index_serialization
    ```
 
-Now, you are to use a [chill chatbot](./chatbot/chill_chatbot.py).
+Now, you are to use a [chill chatbot](backend/service/chatbot/chill_chatbot.py).

@@ -68,7 +68,7 @@ def deserialize_retriever(vectorstore_path: pathlib.Path, metadata_path: pathlib
 
 
 if __name__ == "__main__":
-    data_dir = pathlib.Path(__file__).absolute().parent.parent / "backend" / "data"
+    data_dir = pathlib.Path(__file__).absolute().parent.parent.parent / "data"
     PDF_paths = list(data_dir.glob("*.pdf"))
     embedding_model = HuggingFaceEmbeddings(model_name="lang-uk/ukr-paraphrase-multilingual-mpnet-base")
     text_retriever = process_PDFs(PDF_paths, embedding_model)
