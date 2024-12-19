@@ -38,7 +38,7 @@ def load_index_and_metadata(index_path: pathlib.Path, metadata_path: pathlib.Pat
 
 
 if __name__ == "__main__":
-    data_dir = pathlib.Path(".") / "backend" / "data"
+    data_dir = pathlib.Path(__file__).absolute().parent.parent.parent.parent / "data"
     for image_path in (data_dir / "extracted_images").rglob("*"):
         if image_path.is_dir() or image_path.suffix == "":
             continue

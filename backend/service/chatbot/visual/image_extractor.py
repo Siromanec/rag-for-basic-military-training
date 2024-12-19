@@ -24,5 +24,5 @@ def extract_images_from_pdf(pdf_path: pathlib.Path):
 
 
 if __name__ == "__main__":
-    for pdf_path in (pathlib.Path("") / "backend" / "data").glob("*.pdf"):
+    for pdf_path in (pathlib.Path(__file__).absolute().parent.parent.parent.parent / "data").glob("*.pdf"):
         extract_images_from_pdf(pdf_path)

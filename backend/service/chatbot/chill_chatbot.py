@@ -28,7 +28,7 @@ class ChillChatBot(TextAndImagesChatBot):
         self._load_generator_model()
         self._generate_RAG_pipeline()
 
-        self.similar_image_searcher = SimilarImagesSearcher(pathlib.Path(".") / "backend" / "data")
+        self.similar_image_searcher = SimilarImagesSearcher(pathlib.Path("") / "backend" / "data")
 
     def _process_PDFs(self) -> None:
         """
@@ -72,4 +72,4 @@ class ChillChatBot(TextAndImagesChatBot):
 
 
 if __name__ == "__main__":
-    ChillChatBot(PDF_paths=list((pathlib.Path(__file__).absolute().parent.parent / "backend" / "data").glob("*.pdf")))
+    ChillChatBot(PDF_paths=list((pathlib.Path(__file__).absolute().parent.parent.parent / "data").glob("*.pdf")))
