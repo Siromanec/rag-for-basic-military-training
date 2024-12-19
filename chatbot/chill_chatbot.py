@@ -59,7 +59,7 @@ class ChillChatBot(TextAndImagesChatBot):
         logging.getLogger("langchain_text_splitters.base").setLevel(logging.INFO)
 
         vector_store = FAISS.from_documents(docs, self.embedding_model)
-        self.text_retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 5})
+        self.text_retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 20})
 
         console_logger.info(f"Retriever and embedder successfully initialized.")
 
