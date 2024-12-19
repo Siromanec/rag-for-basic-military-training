@@ -20,7 +20,7 @@ python benchmark.py
 
 ## Creating the index for image retrieval
 
-1. Extract images from the PDF
+1. Extract images from the PDFs.
     ```bash
    python -m chatbot.visual.image_extractor
    ```
