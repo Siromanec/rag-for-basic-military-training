@@ -1,3 +1,5 @@
+import os.path
+
 from repository import convert_image_to_base64_url, read_config_file
 from repository.Message import Message
 from service.chatbot.chill_chatbot import TextAndImagesChatBot, ChillChatBot
@@ -11,11 +13,14 @@ def init_service() -> None:
     global qa
 
     files = read_config_file()
+
     files = [file.strip() for file in files]
     files = [file for file in files if file.endswith(".pdf")]
-    files = [Path(file) for file in files]
+    files = [Path(os.path.join("data", file)) for file in files]
     qa = ChillChatBot(files)
+    print("Service initialized")
 
+init_service()
 
 IMAGE_RESPONSE_TEXT = "Знайдено наступні релевантні зображення:"
 

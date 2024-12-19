@@ -4,14 +4,15 @@ from typing import Annotated
 import fastapi
 from pydantic import AfterValidator
 
-import service.service
+from service import *
 
-from service.service import init_service
+# import service.service import init_service
 from repository.Message import Message
 
 
 @asynccontextmanager
 async def lifespan(router: fastapi.APIRouter):
+    # init_service()
     init_service()
     yield
 
@@ -54,5 +55,5 @@ def validate_conversation(conversation: list[Message]) -> list[Message]:
 
 @router.post("/generate-response")
 def generate_response(conversation: Annotated[list[Message], AfterValidator(validate_conversation)]) -> list[Message]:
-    conversation = service.service.generate_response(conversation)
+    conversation = service.generate_response(conversation)
     return conversation
