@@ -8,6 +8,7 @@ from langchain.docstore.document import Document
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
+from langchain_experimental.text_splitter import SemanticChunker
 from loguru import logger as console_logger
 
 from .abstract_chatbot import TextAndImagesChatBot
@@ -46,7 +47,9 @@ class ChillChatBot(TextAndImagesChatBot):
         import logging
         logging.getLogger("langchain_text_splitters.base").setLevel(logging.ERROR)
 
-        text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+        self.embedding_model = HuggingFaceEmbeddings(model_name="lang-uk/ukr-paraphrase-multilingual-mpnet-base")
+        # text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+        text_splitter = SemanticChunker(embeddings=self.embedding_model, breakpoint_threshold_type="percentile")
         docs = []
         for extracted_text in pdfs_extracted_texts:
             doc = Document(page_content=extracted_text, metadata={"source": "local"})
@@ -55,7 +58,6 @@ class ChillChatBot(TextAndImagesChatBot):
 
         logging.getLogger("langchain_text_splitters.base").setLevel(logging.INFO)
 
-        self.embedding_model = HuggingFaceEmbeddings(model_name="lang-uk/ukr-paraphrase-multilingual-mpnet-base")
         vector_store = FAISS.from_documents(docs, self.embedding_model)
         self.text_retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 5})
 
