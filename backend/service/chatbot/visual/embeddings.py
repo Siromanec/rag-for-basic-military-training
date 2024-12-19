@@ -16,8 +16,7 @@ def generate_image_embedding(image_path: pathlib.Path):
 
 
 def generate_query_embedding(query):
-    max_context_length = 77
-    text = clip.tokenize([query[:max_context_length - 3] + "..."]).to(DEVICE)
+    text = clip.tokenize([query]).to(DEVICE)
     with torch.no_grad():
         text_features = CLIP_model.encode_text(text)
         text_features /= text_features.norm(dim=-1, keepdim=True)  # Normalize embeddings
