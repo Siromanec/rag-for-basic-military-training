@@ -1,5 +1,5 @@
 import pathlib
-
+import numpy as np
 import PIL.Image
 
 from .index_queries import search_similar_images
@@ -12,10 +12,10 @@ class SimilarImagesSearcher:
                                                             precomputed_data_folder / "image_metadata.json")
 
     @staticmethod
-    def _load_image(image_path: str):
-        return PIL.Image.open(image_path).convert("RGB")
+    def _load_image(image_path: str) -> np.ndarray:
+        return np.array(PIL.Image.open(image_path).convert("RGB"))
 
-    def search_similar_images(self, query):
+    def search_similar_images(self, query) -> list[np.ndarray]:
         image_paths_and_scores = search_similar_images(query, self.index, self.metadata)
         image_paths = [image_paths_and_scores[i][0] for i in range(len(image_paths_and_scores))]
         images = [SimilarImagesSearcher._load_image(image_path) for image_path in image_paths]
