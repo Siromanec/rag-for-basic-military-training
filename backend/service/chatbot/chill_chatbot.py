@@ -28,7 +28,7 @@ class ChillChatBot(TextAndImagesChatBot):
         self._load_generator_model()
         self._generate_RAG_pipeline()
 
-        self.similar_image_searcher = SimilarImagesSearcher(pathlib.Path("") / "data")
+        self.similar_image_searcher = SimilarImagesSearcher(pathlib.Path(__file__).absolute().parent.parent.parent / "data")
 
     def _process_PDFs(self) -> None:
         """
@@ -40,8 +40,8 @@ class ChillChatBot(TextAndImagesChatBot):
                                                     embedding_model)
 
     def _load_generator_model(self) -> None:
-        assert pathlib.Path(".env").exists()
-        load_dotenv()
+        # assert pathlib.Path(".env").exists()
+        # load_dotenv()
         assert os.getenv("GEMINI_API_KEY")
 
         genai.configure(api_key=os.environ["GEMINI_API_KEY"])
@@ -63,7 +63,10 @@ class ChillChatBot(TextAndImagesChatBot):
     @override
     def answer_query(self, query: str) -> tuple[str, list[...]]:
         result = self.RAG_pipeline(query)
-        images = self.similar_image_searcher.search_similar_images(query)
+        short_query = self.llm.generate_content(
+            f"Summarize a text that is provided in Ukrainian. Return a very concise version of the text: {query}.").candidates[0].content.parts[0].text
+
+        images = self.similar_image_searcher.search_similar_images(short_query)
         return result["response"], images
 
     @override
