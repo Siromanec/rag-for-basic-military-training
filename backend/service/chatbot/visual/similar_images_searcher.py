@@ -17,7 +17,7 @@ class SimilarImagesSearcher:
 
     def search_similar_images(self, query) -> list[np.ndarray]:
         image_paths_and_scores = search_similar_images(query, self.index, self.metadata)
-        threshold = 0.3
+        threshold = 0.5
         image_paths = [image_path for image_path, score in image_paths_and_scores if score > threshold]
         images = [SimilarImagesSearcher._load_image(image_path) for image_path in image_paths]
         return images
