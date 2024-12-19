@@ -5,14 +5,12 @@ from typing import override
 import google.generativeai as genai
 from dotenv import load_dotenv
 from langchain.docstore.document import Document
-from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_text_splitters import CharacterTextSplitter
-from langchain_experimental.text_splitter import SemanticChunker
 from loguru import logger as console_logger
 
 from .abstract_chatbot import TextAndImagesChatBot
 from .gemini_helpers import generate_RAG_response
+from .process_PDFs import deserialize_retriever
 from .visual.similar_images_searcher import SimilarImagesSearcher
 
 
@@ -23,7 +21,6 @@ class ChillChatBot(TextAndImagesChatBot):
         self.PDF_paths = PDF_paths
 
         self.text_retriever = None
-        self.embedding_model = None
         self.llm = None
         self.RAG_pipeline = None
 
@@ -37,31 +34,10 @@ class ChillChatBot(TextAndImagesChatBot):
         """
         Processes PDFs and creates a text chunks retriever.
         """
-        import pymupdf
-
-        pdfs_extracted_texts = []
-        for pdf_path in self.PDF_paths:
-            pdf = pymupdf.open(pdf_path)
-            pdfs_extracted_texts.append("\n\n".join([pdf[i].get_text() for i in range(len(pdf))]))
-
-        import logging
-        logging.getLogger("langchain_text_splitters.base").setLevel(logging.ERROR)
-
-        self.embedding_model = HuggingFaceEmbeddings(model_name="lang-uk/ukr-paraphrase-multilingual-mpnet-base")
-        # text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-        text_splitter = SemanticChunker(embeddings=self.embedding_model, breakpoint_threshold_type="percentile")
-        docs = []
-        for extracted_text in pdfs_extracted_texts:
-            doc = Document(page_content=extracted_text, metadata={"source": "local"})
-            split_docs = text_splitter.split_documents([doc])
-            docs.extend(split_docs)
-
-        logging.getLogger("langchain_text_splitters.base").setLevel(logging.INFO)
-
-        vector_store = FAISS.from_documents(docs, self.embedding_model)
-        self.text_retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 20})
-
-        console_logger.info(f"Retriever and embedder successfully initialized.")
+        folder = self.PDF_paths[0].parent
+        embedding_model = HuggingFaceEmbeddings(model_name="lang-uk/ukr-paraphrase-multilingual-mpnet-base")
+        self.text_retriever = deserialize_retriever(folder / "text_vectorstore", folder / "text_metadata.pkl",
+                                                    embedding_model)
 
     def _load_generator_model(self) -> None:
         assert pathlib.Path(".env").exists()
