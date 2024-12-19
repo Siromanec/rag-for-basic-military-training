@@ -21,7 +21,6 @@ class ChillChatBot(TextAndImagesChatBot):
         self.PDF_paths = PDF_paths
 
         self.text_retriever = None
-        self.embedding_model = None
         self.llm = None
         self.RAG_pipeline = None
 

@@ -75,3 +75,4 @@ if __name__ == "__main__":
     serialize_retriever(text_retriever, data_dir / "text_vectorstore", data_dir / "text_metadata.pkl")
     retriever_loaded = deserialize_retriever(data_dir / "text_vectorstore", data_dir / "text_metadata.pkl",
                                              embedding_model)
+    retriever_loaded.invoke("Як поводитись в умовах стресу?")
