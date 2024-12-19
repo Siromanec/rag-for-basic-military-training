@@ -12,6 +12,7 @@ from loguru import logger as console_logger
 
 from .abstract_chatbot import TextAndImagesChatBot
 from .gemini_helpers import generate_RAG_response
+from .visual.similar_images_searcher import SimilarImagesSearcher
 
 
 class ChillChatBot(TextAndImagesChatBot):
@@ -28,6 +29,8 @@ class ChillChatBot(TextAndImagesChatBot):
         self._process_PDFs()
         self._load_generator_model()
         self._generate_RAG_pipeline()
+
+        self.similar_image_searcher = SimilarImagesSearcher(pathlib.Path(".") / "backend" / "data")
 
     def _process_PDFs(self) -> None:
         """
@@ -82,7 +85,8 @@ class ChillChatBot(TextAndImagesChatBot):
     @override
     def answer_query(self, query: str) -> tuple[str, list[...]]:
         result = self.RAG_pipeline(query)
-        return result["response"], ...
+        images = self.similar_image_searcher.search_similar_images(query)
+        return result["response"], images
 
     @override
     def get_retrieved_documents(self, query: str) -> list[Document]:

@@ -13,3 +13,5 @@ unstructured_pytesseract~=0.3.13
 langchain_huggingface~=0.1.2
 google-generativeai
 loguru~=0.7.3
+faiss-cpu
+openai-clip
